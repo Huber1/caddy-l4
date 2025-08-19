@@ -1,8 +1,14 @@
 FROM caddy:builder AS builder
 
-RUN xcaddy build \
-  --with github.com/mholt/caddy-l4
+WORKDIR /build
+
+RUN git clone https://github.com/mholt/caddy-l4.git
+
+WORKDIR /build/caddy-l4
+
+RUN xcaddy build
 
 FROM caddy:latest
 
-COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+COPY --from=builder /build/caddy-l4/caddy /usr/bin/caddy
+
